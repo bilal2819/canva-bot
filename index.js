@@ -72,7 +72,7 @@ async function inviteToCanva(targetEmail) {
         await page.goto('https://www.canva.com/settings/people', { waitUntil: 'networkidle2', timeout: 60000 });
         
         console.log('🔍 Finding "Invite people" button...');
-        const inviteButton = await page.waitForXPath(`//button[contains(., "Invite people")]`, { timeout: 15000 });
+        const inviteButton = await page.waitForSelector('::-p-xpath(//button[contains(., "Invite people")])', { timeout: 15000 });
         if (inviteButton) {
             await inviteButton.click();
             console.log('✅ Clicked "Invite people"');
@@ -91,7 +91,7 @@ async function inviteToCanva(targetEmail) {
         
         // Click the actual Send / Invite button
         console.log('🔍 Clicking the Send Invitations button...');
-        const sendButton = await page.waitForXPath(`//button[contains(., "Send invitations") or contains(., "Invite")]`, { timeout: 5000 });
+        const sendButton = await page.waitForSelector('::-p-xpath(//button[contains(., "Send invitations") or contains(., "Invite")])', { timeout: 5000 });
         if (sendButton) {
             await sendButton.click();
             console.log('✅ Clicked Send Invitations!');
