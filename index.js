@@ -20,8 +20,9 @@ async function inviteToCanva(targetEmail) {
         executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
     });
 
+    let page;
     try {
-        const page = await browser.newPage();
+        page = await browser.newPage();
         await page.setViewport({ width: 1280, height: 800 });
         
         // Anti-detection evasion
