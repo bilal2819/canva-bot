@@ -74,6 +74,28 @@ async function inviteToCanva(targetEmail) {
         
         console.log('🔍 Current URL is: ' + page.url());
 
+        // Check if we got redirected to a "Jump back in!" or Login screen
+        try {
+            console.log('🔍 Checking for "Continue" button (Jump back in)...');
+            const continueBtn = await page.waitForSelector('::-p-xpath(//button[descendant-or-self::*[text()="Continue"] or contains(., "Continue")])', { timeout: 5000 });
+            if (continueBtn) {
+                console.log('👆 Found "Continue" button! Clicking it...');
+                await Promise.all([
+                    continueBtn.click(),
+                    page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 30000 }).catch(() => {})
+                ]);
+                console.log('✅ Clicked Continue! Current URL: ' + page.url());
+                
+                // If we are still not on settings/people, navigate again
+                if (!page.url().includes('settings/people')) {
+                    console.log('Navigating to Settings -> People again...');
+                    await page.goto('https://www.canva.com/settings/people', { waitUntil: 'networkidle2', timeout: 60000 });
+                }
+            }
+        } catch (e) {
+            console.log('No "Continue" button found, proceeding normally.');
+        }
+
         console.log('🔍 Finding "Invite people" button...');
         const inviteButton = await page.waitForSelector('::-p-xpath(//button[contains(., "Invite people")])', { timeout: 15000 });
         if (inviteButton) {
