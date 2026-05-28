@@ -71,6 +71,8 @@ async function inviteToCanva(targetEmail) {
         console.log('Navigating directly to Settings -> People page...');
         await page.goto('https://www.canva.com/settings/people', { waitUntil: 'networkidle2', timeout: 60000 });
         
+        console.log('🔍 Current URL is: ' + page.url());
+
         console.log('🔍 Finding "Invite people" button...');
         const inviteButton = await page.waitForSelector('::-p-xpath(//button[contains(., "Invite people")])', { timeout: 15000 });
         if (inviteButton) {
@@ -105,6 +107,12 @@ async function inviteToCanva(targetEmail) {
 
     } catch (error) {
         console.error('❌ Canva automation error:', error.message);
+        try {
+            await page.screenshot({ path: 'canva_error.png', fullPage: true });
+            console.log('📸 Saved error screenshot to canva_error.png');
+        } catch (e) {
+            console.error('Could not take screenshot', e);
+        }
         process.exit(1);
     } finally {
         await browser.close();
